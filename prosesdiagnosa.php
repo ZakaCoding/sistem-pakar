@@ -69,19 +69,20 @@
             $belief = floatval($cf['nilai'] * $cf_db_pakar['cf_pakar']);
             $plaus = floatval(1 - $belief);
 
+            $diagnose = [];
+            // get kode_penyakit
+            $query = mysqli_query($konek_db, "SELECT `kode_penyakit`, `kode_gejala` FROM `tb_rules` WHERE `kode_gejala` = '" . $value[0] . "'");
+            $rows = mysqli_num_rows($query);
+
+            while($data = mysqli_fetch_assoc($query))
+            {
+                array_push($diagnose, $data['kode_penyakit']);
+            }
+
             // First Densities
-            array_push($densities , ['kode_gejala' => $value[0] ,'belief' => $belief, 'plausability' => $plaus, 'densities' => floatval($belief + $plaus)]);
+            array_push($densities , ['kode_gejala' => $value[0] ,'belief' => $belief, 'plausability' => $plaus, 'densities' => floatval($belief + $plaus), "diagnose" => $diagnose]);
         }
     }
-
-
-    echo "<pre> Data CF user <br>";
-    print_r($cf_user);
-    echo "</pre>";
-
-    echo "<pre> Data CF Pakar <br>";
-    print_r($cf_pakar);
-    echo "</pre>";
 
     echo "<pre> Data densities <br>";
     print_r($densities);
@@ -89,7 +90,7 @@
 
     // check next densities
     /**
-     * Create new rules tables for combination next densities
+     * Create new rules tables combination for next densities
      * EXAMPLE :
      * __________________________________________________________
      * |                   | m2() = 0,12 | m2(theta) = 0,88    |
@@ -112,25 +113,72 @@
      * 
      */
     
-    $left_table_rules = [$densities[0]['belief'], $densities[0]['plausability']];
+    $table_header = [];
+    $table_body = ["P1" => 0, "P2" => 0, "PComb" => 0, "P_0" => 0];
+    $table_result = [];
+
+    for($i = 1; $i < count($densities); $i++)
+    {
+        array_push($table_header, [
+            "x" => $densities[$i]['belief'], 
+            "y" => $densities[$i]['plausability']
+        ]);
+    }
+
+    echo "<pre>TABLE HEADER <br>" ;
+    print_r($table_header);
+    echo "</pre>";
+
+    // Probability
+    /**
+     * Penyakit P1
+     * Penyakit P2
+     * Penyakit {P1, P2, P3}
+     * Penyakit 0
+     * 
+     */
+    $probs = 3; // ["P1","P2" ,"P2,P3,P4", "0"];
+
+    $P1 = 0;
+    $P2 = 0;
+    $P_Comb = 0;
+    $P_theta = 0;
+    
+    // Assign table body for operand
+    $i = 0;
+    foreach ($table_body as $key => $value) {
+        if($key === "P1")
+        {
+            $table_body[$key] = $densities[0]['belief'];
+            $table_body["P_0"] = $densities[0]['plausability'];
+
+            // assign to result table
+            array_push($table_result, floatval($table_body[$key] * $table_header[$i]['x']));
+            array_push($table_result, floatval($table_body[$key] * $table_header[$i]['y']));
+        }
+        elseif($key == "P2")
+        {
+
+        }
+        elseif($key == "PComb")
+        {
+
+        }
+        $i++;
+    }
+
+    echo "Data table header ";
+    echo "<pre>" ;
+    print_r($table_body);
+    echo "</pre>";
+
+    // Assign result table
     
 
-    echo "<pre> Data Left tables rules <br>";
-    print_r($left_table_rules);
+    echo "Data table result";
+    echo "<pre>" ;
+    print_r($table_result);
     echo "</pre>";
-
-    $right_table_rules = [$densities[1]['belief'], $densities[1]['plausability']];
-
-    echo "<pre> Data Right tables rules <br>";
-    print_r($right_table_rules);
-    echo "</pre>";
-
-    // Result
-    $result = floatval($left_table_rules[0] * $right_table_rules[0]);
-    echo $result . "<br>";
-
-    $result = floatval($left_table_rules[1] * $right_table_rules[1]);
-    echo $result;
 
     exit();
 ?>

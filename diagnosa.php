@@ -67,35 +67,37 @@
                       <th scope="col">Kondisi</th>
                   </tr>
               </thead>
-              <?php
-                //menampilkan daftar gejala
-                $arrKDGejala = array();
-                $arrKDGejalaSelect = array();
-                $sql = "SELECT * FROM tb_gejala ORDER BY kode_gejala";
-                $id = 0;
-                $result = $konek_db -> query($sql);
-                while ($row = $result -> fetch_array()){
-                    $id++;
-                    echo "<tr><td>". $id ."</td>";
-                    echo "<td>" . $row[1] . "</td>";
-                    echo "<td>" . $row[2] . "</td>";
-                    echo "<td class='opsi'><select name='evidence[]' id='kondisi' . $id . '' class='opsikondisi'/><option data-id='0' value='0' >Pilih jika sesuai</option>";
-                    // $arrKDGejala[] = $row -> nama_gejala;
-                    // $arrKDGejalaSelect[] = $row -> $id;
-                    $s = "SELECT * FROM tb_kondisi order by id_kondisi";
-                    $q = mysqli_query($konek_db, $s);
-                    while ($rw = mysqli_fetch_array($q)) {
-               ?>      
-                    <option data-id="<?php echo $rw['id_kondisi']; ?>" value="<?php echo $row['kode_gejala'] . '_' . $rw['id_kondisi']; ?>"><?php echo $rw['nama_kondisi']; ?></option>
-                    <?php
-                        }
-                        echo '</select></td>';
-                        }
-                    ?>
+              <tbody>
+                <?php
+                    //menampilkan daftar gejala
+                    $arrKDGejala = array();
+                    $arrKDGejalaSelect = array();
+                    $sql = "SELECT * FROM tb_gejala ORDER BY kode_gejala";
+                    $id = 0;
+                    $result = $konek_db -> query($sql);
+                    while ($row = $result -> fetch_array()){
+                        $id++;
+                        echo "<tr><td>". $id ."</td>";
+                        echo "<td>" . $row[1] . "</td>";
+                        echo "<td>" . $row[2] . "</td>";
+                        echo "<td class='opsi'><select name='evidence[]' id='kondisi' . $id . '' class='opsikondisi'/><option data-id='0' value='0' >Pilih jika sesuai</option>";
+                        // $arrKDGejala[] = $row -> nama_gejala;
+                        // $arrKDGejalaSelect[] = $row -> $id;
+                        $s = "SELECT * FROM tb_kondisi order by id_kondisi";
+                        $q = mysqli_query($konek_db, $s);
+                        while ($rw = mysqli_fetch_array($q)) {
+                ?>      
+                        <option data-id="<?php echo $rw['id_kondisi']; ?>" value="<?php echo $row['kode_gejala'] . '_' . $rw['id_kondisi']; ?>"><?php echo $rw['nama_kondisi']; ?></option>
+                        <?php
+                            }
+                            echo '</select></td>';
+                            }
+                        ?>
+                </tbody>
           </table>
           <br>
           <button type="submit" name="submit"  class="btn btn-primary">CEK TINGKAT DEPRESI</button>
-          </form>
+        </form>
          
       </div>
       
