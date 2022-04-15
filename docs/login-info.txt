@@ -1,0 +1,8 @@
+Login:
+1. Admin
+username = admin
+password = admin
+
+2. User
+username = yunita
+password = yunita
