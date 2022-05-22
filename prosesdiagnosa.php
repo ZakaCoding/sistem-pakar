@@ -143,42 +143,6 @@
     $P2 = 0;
     $P_Comb = 0;
     $P_theta = 0;
-    
-    // Assign table body for operand
-    $i = 0;
-    foreach ($table_body as $key => $value) {
-        if($key === "P1")
-        {
-            $table_body[$key] = $densities[0]['belief'];
-            $table_body["P_0"] = $densities[0]['plausability'];
-
-            // assign to result table
-            array_push($table_result, floatval($table_body[$key] * $table_header[$i]['x']));
-            array_push($table_result, floatval($table_body[$key] * $table_header[$i]['y']));
-        }
-        elseif($key == "P2")
-        {
-
-        }
-        elseif($key == "PComb")
-        {
-
-        }
-        $i++;
-    }
-
-    echo "Data table header ";
-    echo "<pre>" ;
-    print_r($table_body);
-    echo "</pre>";
-
-    // Assign result table
-    
-
-    echo "Data table result";
-    echo "<pre>" ;
-    print_r($table_result);
-    echo "</pre>";
 
     exit();
 ?>
