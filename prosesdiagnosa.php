@@ -113,36 +113,52 @@
      * 
      */
     
-    $table_header = [];
-    $table_body = ["P1" => 0, "P2" => 0, "PComb" => 0, "P_0" => 0];
-    $table_result = [];
+    // Table combination rules
 
-    for($i = 1; $i < count($densities); $i++)
+    // first count
+    $table_header = [];
+    foreach(array_slice($densities, 1) as $data_header)
     {
-        array_push($table_header, [
-            "x" => $densities[$i]['belief'], 
-            "y" => $densities[$i]['plausability']
-        ]);
+        array_push($table_header, ["X" => ['key' => implode("",$data_header['diagnose']), 'value' => $data_header['belief']], "Y" => ['key' => "theta", 'value' => $data_header['plausability']]]);
     }
 
-    echo "<pre>TABLE HEADER <br>" ;
+    echo "<pre> Data densities <br>";
     print_r($table_header);
     echo "</pre>";
 
-    // Probability
-    /**
-     * Penyakit P1
-     * Penyakit P2
-     * Penyakit {P1, P2, P3}
-     * Penyakit 0
-     * 
-     */
-    $probs = 3; // ["P1","P2" ,"P2,P3,P4", "0"];
-
     $P1 = 0;
     $P2 = 0;
-    $P_Comb = 0;
-    $P_theta = 0;
+    $PComb = 0;
+    $theta = 0;
+
+    // data
+    $P1_data = [];
+
+    for($i = 0; $i < count($densities); $i++)
+    {
+        echo $table_header[$i]['X']['key'] . "<br>";
+    }
+
+    function getRules()
+    {
+        if("P1P2P3P1P2P3")
+        {
+            return "P1P2P3";
+        }
+        else if("P1P2")
+        {
+            return "theta";
+        }
+        else if("P1")
+        {
+
+        }
+    }
+
+    function create_densities()
+    {
+
+    }
 
     exit();
 ?>
