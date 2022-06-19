@@ -84,9 +84,9 @@
         }
     }
 
-    echo "<pre> Data densities <br>";
-    print_r($densities);
-    echo "</pre>";
+    // echo "<pre> Data densities <br>";
+    // print_r($densities);
+    // echo "</pre>";
 
     // check next densities
     /**
@@ -122,9 +122,9 @@
         array_push($table_header, ["X" => ['key' => implode("",$data_header['diagnose']), 'value' => $data_header['belief']], "Y" => ['key' => "theta", 'value' => $data_header['plausability']]]);
     }
 
-    echo "<pre> Data densities <br>";
-    print_r($table_header);
-    echo "</pre>";
+    // echo "<pre> Data densities <br>";
+    // print_r($table_header);
+    // echo "</pre>";
 
     $P1 = 0;
     $P2 = 0;
@@ -134,33 +134,40 @@
     // data
     $P1_data = [];
 
-    for($i = 0; $i < count($densities); $i++)
-    {
-        echo $table_header[$i]['X']['key'] . "<br>";
-    }
+    // for($i = 0; $i < count($densities); $i++)
+    // {
+    //     echo $table_header[$i]['X']['key'] . "<br>";
+    // }
 
-    function getRules()
+    function getRules($datas)
     {
-        if("P1P2P3P1P2P3")
+        $data = implode('',$datas);
+        if($data == "P1" && $data = "P1P2P3")
+        {
+            return "P1";
+        }
+        else if($data == "P1" && $data = "P1")
+        {
+            return "P1";
+        }
+        else if($data == "theta" && $data = "P1P2P3")
         {
             return "P1P2P3";
         }
-        else if("P1P2")
+        else if($data == "P1" && $data = "theta")
         {
-            return "theta";
+            return "P1";
         }
-        else if("P1")
+        else
         {
-
+            return $data;
         }
     }
 
-    function create_densities()
-    {
+    // count
 
-    }
 
-    exit();
+    // exit();
 ?>
 
 <!doctype html>
@@ -214,11 +221,57 @@
       </div>
 
       <div class="col-md-10 mt-5">
-            <div class="card ">
-                <div class="card-body">
-                    <?php
-                        
-                     ?>
+            <div class="card mt-5">
+                <div class="card-body pt-5">
+                     <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Kode Gejala</th>
+                                <th>belief</th>
+                                <th>plausability</th>
+                                <th>densities</th>
+                                <th>Diagnose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                foreach ($densities as $data):
+                                ?>
+                                <tr>
+                                    <td><?= $data['kode_gejala'] ?></td>
+                                    <td><?= $data['belief'] ?></td>
+                                    <td><?= $data['plausability'] ?></td>
+                                    <td><?= $data['densities'] ?></td>
+                                    <td>
+                                        <?php                                            
+                                            foreach($data['diagnose'] as $values):
+                                                echo $values . ',';
+                                            endforeach;
+                                        ?>
+                                    </td>
+                                </tr>
+                                <?php
+                                endforeach;
+                            ?>
+                        </tbody>
+                     </table>
+
+                     <h1 class="fs-3 fw-bold my-2">Hasil Densitas Baru</h1>
+                     <small class="text-muted">(Hasil dari perhitungan pertama)</small>
+                     <p>
+                        <?php
+                            $row1 = $densities[0]['belief'] * $densities[1]['belief'];
+                            $row2 = $densities[0]['belief'] * $densities[1]['plausability'];
+
+                            $row3 = $densities[0]['plausability'] * $densities[1]['belief'];
+                            $row4 = $densities[0]['plausability'] * $densities[1]['plausability'];
+
+                            // check diagnose
+                            echo "(" . implode($densities[0]['diagnose']) . ") (" . implode($densities[1]['diagnose']) . ") = " . $row1 . ' + ' . $row2 . ' = ' . floatval($row1 + $row2);
+                            echo "<br>";
+                            echo "(" . implode($densities[0]['diagnose']) . ") (" . implode($densities[1]['diagnose']) . ") = " . $row3 . ' + ' . $row4 . ' = ' . floatval($row3 + $row4);
+                        ?>
+                     </p>
                 </div>
             </div>       
         </div>
